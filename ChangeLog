@@ -1,0 +1,32 @@
+Initial
+EB -> Etienne Bergeron
+ERL -> Eric Lesage
+
+1.0
+---
+Released on 2001-05-01
+Initial version
+
+
+1.0.1
+-----
+Released on 2001-05-17
+- Fixebergerizedd bug when parsing IMM and NAME bigger than 10bits. (EB)
+- Fixed bug when saving in HEX format. (EB)
+
+1.0.2
+-----
+Released on 2001-05-22
+- Fixed bug when saving file with same code and data segment. (EB)
+
+1.0.3
+-----
+Released on 2001-11-13
+-New syntax rules to accept data reservations. (EB)
+-Fixed bug where PC was not wide enough. (EB)
+-Fixed bug: set instructions (incorrect operand types). (EB)
+-Fixed printing bug of immediate instructions. (EB)
+-Fixed makefile (no longer attempt to change permissions and group). (ERL)
+-No longer licensed under versions of the GPL *above* 2 (these versions
+ do not exist yet).
+

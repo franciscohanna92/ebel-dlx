@@ -1,0 +1,264 @@
+Documentation for the EBEL DLX Simulator version 1.0
+
+By Etienne Bergeron and Eric Lesage
+
+1. Introduction
+
+EBEL is a simulator for a DLX machine. It takes as input an assembly
+program, compiles it and allows the user to run the code under a virtual
+machine. It also allows the compiled code to be saved in a file.
+
+The DLX (pronounced Deluxe) machine is based on a RISC instruction set
+architecture. Thirty-two general-purpose registers and thirty-two
+floating-point registers are available.
+
+1.1 Quick Tutorial
+
+Enter the following DLX assembly code in a file named test.asm:
+
+addi r1,r0,4 ; Set register 1 to 4
+addi r2,r0,8 ; Set register 2 to 8
+add r3,r1,r2 ; Add r1 and r2, put the result in r3
+trap 0       ; End program
+
+Enter the DLX system and type "load test.asm"; this will cause the
+simulator to load the code above.
+
+Type "run"; the code executes and the program terminates.
+
+Type "inspect r3" to see the result of the addition.
+
+Finally, type "quit" to exit the system.
+
+2. System Description
+
+The program is built around modules; three modules exist:
+
+- asm: the purpose of this module is to load assembler files written by the
+  user, check them against the syntax, and produce byte-code conformant to
+  the format of the DLX instructions.
+
+- vm: this module takes as input DLX bytecode and executes it in a
+  controlled environment. In effet, it it a virtual DLX processor.
+
+- sim: this module provides a command-line user interface.
+
+3. The Assembler
+
+This module loads assembler files and compiles them to bytocode.
+
+3.1 DLX Assembler File Format
+
+The DLX assembler file is line-oriented: each line is analysed
+independently. If there is a problem on a line, it is skipped, but the
+rest of the file is still parsed.
+
+Each line has one of the following formats, where <x> is a token and
+[part] denotes an optionnal part:
+
+Instruction: [<labels>] <opcode> <operands> [";" <comment>]
+Constant declaration: <constant_name> equ <value> [";" <comment>]
+Array declaration: <table_name> <table_type> <valuelist> [";" <comment>]
+Origin declaration: "code"|"data" "org" <value>
+
+A semi-colon may precede arbitrary text in all line formats.
+
+3.1.1 Instruction Declaration
+
+<label> is an identifier followed by a colon.
+
+<opcode> is one of the standard mnemonic opcodes of the DLX instruction
+set.
+
+<operands> varies according to the kind of instruction: it can be one
+of the following:
+
+(1) <register> "," <register> "," <register>
+(2) <register> "," <register> "," <immediate>
+(3) <register> "," <register>
+(4) <register> "," <immediate>
+(5) <register>
+(6) <immediate>
+(7) <memory> "," <register>
+(8) <register> "," <memory>
+
+
+It can also be an empty string for opcodes that do not take any operand.
+<immediate> can be any integer arithmetic expression; <register> is one of
+the registers of the machine; <memory> is a register enclosed in
+parenthesis, optionnaly preceded by an arithmetic expression.
+
+Examples of complete lines for each of the above:
+
+(1) loop_1: add r1,r1,r0
+(2)   2k: somelabel: addi r1,r1,1 ; Whitespace and multiple labels
+(3) movi2s r3,r4             ; Move (execution not implemented in the VM)
+(4) _x: bnez r11, for_body-8 ; A label can be part of an expression
+(5) jr r1                    ; Jump-register
+(6) incond: j (8-3)*4-9 / 3  ; Jump with a complex expression for target
+(7) sw 2*5(r1), r3         ; Store r3 in position r1+(2*5)
+(8) ld f4, data8(r1)       ; data8 is the address of data8, not its content
+
+3.1.2 Constant declaration
+
+<constant_name> is a string; it is similar to a label.
+
+<value> is an arithmetic expression.
+
+3.1.3 Array declaration
+
+An array declaration is a recursive list of values:
+
+<type> is one of byte, word, int, long, float and double. The notation
+"_word" is also supported for backward compatibility.
+
+<valuelist> either one of:
+
+(1) <valuelist> "," <valuelist>
+(2) <valuelist> "[" <value> "]"
+(3) <constant_value>
+
+Therefore, the following are all equivalent value lists:
+
+- 1,1,1,1,1
+- 1 [5]
+- 1[2],1[3]
+- (1, 1)[2],1
+- 1[2][2],1
+
+3.1.4 Origin declaration
+
+A code or data origin indicates the memory location at which the following
+code or data (array) declarations should be located.
+
+For instance:
+
+code org 40
+
+The code following this will be placed at addresses 40 and onward. Note that
+if there is no data origin declaration, the data will be placed in the same
+address-space as the code. This allows for self-modifying code.
+
+4. User interface for simulation
+
+The user interface is line oriented. When the simulator starts, it
+presents the versions of the modules being used and presents the "DLX>"
+prompt to the user, at which a command may be entered. The command may be
+edited until it is complete, at which time the Enter key must be pressed
+to confirm it.
+
+A history of the commands entered up to now is provided; the vertical
+arrow keys are used to navigate it. Furthermode, a filename may be
+automatically completed by using the Tab key. If there are many
+possibilities for completion, pressing the Tab key twice will show the
+candidates.
+
+The following commands are available:
+
+load <filename>
+
+This command loads an assembler file and internally parses it into
+bytecode. The file is then ready for execution. If parse errors occur while
+analyzing the file, the line at which they occur will be printed to the
+screen.
+
+save <type> <filename>
+
+This command saves the bytecode into a file. Three types of format are
+available:
+ b - binary format: the byte codes is saved directly as bytes
+ h - hexadecimal format: each byte of the bytecode is converted to two
+     hexadecimal digits; that string is saved.
+ v - VHDL format: the bytecode is saved as a text file representing an
+     array of 4-byte quantities formatted in the VHDL language.
+
+quit
+
+This command unconditionnaly quits the system. It may be abbreviated as
+"q". The synonym "exit" is also available.
+
+help
+
+This command prints out a short help message. It may be abbreviated as "h"
+or "?".
+
+step [<quantity>]
+
+This executes the specified number of instructions. If the quantity is not
+supplied, one instruction will be executed. This command may be
+abbreviated as "s".
+
+run
+
+This runs the program until a trap is encountered. This command may be
+abbreviated as "r".
+
+inspect [<register>]
+
+This command is used to inspect the contents of registers. If no register
+is specified, the content of all registers is printed in hexadecimal
+format (the D series represents the F registers as double precision
+numbers).
+
+Alternatively, a register may be specified; for general-purpose registers
+(R0 to R31), the value is written as an integer, an unsigned integer, an
+octal integer and an hexadecimal integer. For floating-point registers,
+the value is written as a floating-point number and then as an hexadecimal
+value.
+
+disassemble [<start> [<length>]]
+
+This command shows the result of the disassembly of the current memory
+content starting at the <start> memory location, for a length of <length>
+bytes.
+
+If the length is not specified, it is assumed that the disassembly shall
+proceed to the end of the memory. If the start position is not specified,
+the disassembly begins at the start of the memory.
+
+This command may be abbreviated as "dasm".
+
+dump [<start> [<length>]]
+
+This command dumps the content of the memory to the screen; the parameters
+are the same as for the "disassemble" command.
+
+break <symbol>
+
+This command sets a breakpoint at the address that matches the symbol
+value.
+
+unbreak <symbol>
+
+This command unsets a breakpoint at the address that matches the symbol
+value, if one was set there.
+
+symbols [<symbol>]
+
+This command lists the available symbols. Symbols include labels and
+constants. If a symbol is specified, only that one is listed.
+
+set-slots <number>
+
+This sets the number of branch delay slots used for code analysis.
+
+tree
+
+This command prints out the parsing tree derived from the assembly
+language file that was last loaded.
+
+trace
+
+This command makes the simulator output to the screen the disassembly of the
+instructions being executed (with step or run).
+
+untrace
+
+This command silences the simulator; it undoes the effects of trace.
+
+reset
+
+This command resets the virtual machine; instructions will be re-executed
+from the beginning of the program, and registers will be set to 0.
+
+

@@ -1,0 +1,49 @@
+README for EBEL DLX version 1.0
+By Etienne Bergeron <bergeret@iro.umontreal.ca>
+and Eric Lesage <lesagee@iro.umontreal.ca>
+
+OVERVIEW
+========
+This directory contains release 1.0 of the EBEL DLX system. EBEL DLX
+includes a DLX compiler and simulator. This release has been built
+successfully on an i686 PC with Linux 2.2 (ELF) and glibc 2.1.
+
+This software is licensed according to the GNU GPL; see the file COPYING.
+
+The EBEL DLX system conforms to the DLX architecture standard. Installation
+instructions are given in the next section. The user manual for the EBEL
+system is available in the doc directory.
+
+If you have any questions concerning EBEL system please address them to:
+ 
+   bergeret@iro.umontreal.ca
+   lesagee@iro.umontreal.ca
+ 
+The latest official release of the system can be obtained from the web page
+at: 
+
+   http://www.iro.umontreal.ca/~bergeret/EBEL-DLX/  
+
+
+HOW TO COMPLILE
+===============
+
+Type "make". 
+
+After a successful "make" you will have the following file:
+
+dlx : EBEL DLX System executable file. 
+
+TODO
+====
+- Finish and verify floating point instructions assembly and simulation.
+  (Not completed and not tested.)
+- Some instructions are not implemented in the VM. ( mov** cvt** ).
+- Parse the command line with a lex/yacc grammar to accept complex
+  expressions.
+
+
+KNOWN LIMITATIONS AND DEFICIENCIES
+==================================
+- The last line of the input file needs a <cr> to be accepted. Without the
+  <cr>, you will obtain a "parse error".
