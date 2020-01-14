@@ -21,7 +21,7 @@ compile: parser ${OBJECTS} dlx
 
 dlx: ${OBJECTS}
 	@echo "Linking"
-	@${CC} ${CCARGS} ${OBJECTS} -lreadline -o dlx
+	@${CC} ${CCARGS} ${OBJECTS} -lreadline -o dlx.exe
 	@echo "Linking done"
 
 .c.o:

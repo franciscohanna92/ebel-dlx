@@ -20,6 +20,7 @@
  * 02111-1307, USA.
  ************************************************************************/
                                                                               
+#include <stdlib.h>
 #include "../lib/dlxtypes.h"
 #include "gencode.h"
 
@@ -91,8 +92,6 @@ void asm_gencode_allocate_memory( Node *node ) {
   }
 
 }
-
-
 
 void asm_gencode_build_memory( Node *node ) {
   Node *n;

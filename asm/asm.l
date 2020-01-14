@@ -1,8 +1,9 @@
 %{
 #include <string.h>
 #include <ctype.h>
-#include "lib/dlxinstset.h"
-#include "asm/asm.tab.h"
+#include "../lib/dlxinstset.h"
+#include "../asm/asm.h"
+#include "../asm/asm.tab.h"
 
 
 #ifdef DEBUG_LEX

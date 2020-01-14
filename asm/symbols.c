@@ -75,9 +75,9 @@ void symbols_print( symbols_t *s, const char* name ) {
   }
   else {
     if( n->type == A_VALUE ) 
-      printf("%10s = %08X  (%d)\n", n->identifier, n->value, n->value );
+      printf("%10s = %08lX  (%ld)\n", n->identifier, n->value, n->value );
     else
-      printf("%10s = %08X  (%f)\n", n->identifier, n->value, n->value );
+      printf("%10s = %08lX  (%ld)\n", n->identifier, n->value, n->value );
   }
 }
 
@@ -85,9 +85,9 @@ void symbols_printall( symbols_t *s ) {
   Node *tmp = s->list;
   while( tmp != NULL ) {
     if( tmp->type == A_VALUE )
-      printf("%10s = %08X  (%d)\n", tmp->identifier, tmp->value, tmp->value );
+      printf("%10s = %08lX  (%ld)\n", tmp->identifier, tmp->value, tmp->value );
     else
-      printf("%10s = %08X  (%f)\n", tmp->identifier, tmp->fvalue, tmp->value );
+      printf("%10s = %08f  (%ld)\n", tmp->identifier, tmp->fvalue, tmp->value );
     tmp = tmp->next;
   }
 }

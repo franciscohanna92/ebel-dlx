@@ -22,6 +22,7 @@
                                                                               
 #include <stdlib.h>
 #include <stdio.h>
+#include <strings.h>
 #include "asm.h"
 #include "analyse.h"
 #include "symbols.h"

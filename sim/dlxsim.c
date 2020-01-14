@@ -25,6 +25,7 @@
 #include "../lib/dlxdebug.h"
 #include "../asm/dlxasm.h"
 #include "../vm/dlxvm.h"
+#include "../asm/gencode.h"
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -183,7 +184,7 @@ int sim_inspect(char* reg)
           if (streq("fpsr", register_token)) {
             i_val = dlx_vm.registers.PC;
             printf("FPSR = %u\n", i_val);
-            return;
+            return 0;
           }
           if ((register_token[1] >= '0' && register_token[1] <= '9')
               && ((register_token[2] >= '0' && register_token[2] <= '9'
@@ -200,7 +201,7 @@ int sim_inspect(char* reg)
               }
               else {
                 f_val = dlx_vm.registers.F[r_index];
-                printf("F%d = %f %u 0%o 0x%08x\n", r_index, f_val, f_val, f_val, f_val);
+                printf("F%d = %f %f 0%f 0x%08f\n", r_index, f_val, f_val, f_val, f_val);
               }
             }
             else {

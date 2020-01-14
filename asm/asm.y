@@ -4,8 +4,8 @@
 #include <stdarg.h> 
 #include <string.h>
 #include <stdlib.h>
-#include "asm/asm.h"
-#include "lib/dlxinstset.h"
+#include "../asm/asm.h"
+#include "../lib/dlxinstset.h"
 
 #define H(v) (((unsigned long)v)>>16)
 #define L(v) (v&0xFFFFU)
@@ -518,7 +518,7 @@ void asm_print_tree( Node *n ) {
                    if( n->next != NULL ) 
                      printf(",");
                    break;
-    case A_VALUE:  printf("%X", n->value );      
+    case A_VALUE:  printf("%ld", n->value );      
                    if( n->next != NULL ) 
                      printf(",");
                    break;

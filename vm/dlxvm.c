@@ -138,13 +138,13 @@ void vm_jump( int pc ) {
   dlx_vm.registers.NPC = pc;
 }
 
-inline int vm_internal_fetch( DLX_UINT pc, dlx_instr_decode *instr ) {
+int vm_internal_fetch( DLX_UINT pc, dlx_instr_decode *instr ) {
   if( pc >= dlx_vm.code_length ) return 1;
   instr->instr = LOAD_BYTE_TO_INT( &(dlx_vm.code[pc]) );
   return 0;
 }
 
-inline void vm_internal_decode( dlx_instr_decode *instr ) {
+void vm_internal_decode( dlx_instr_decode *instr ) {
   instr->opcode = (instr->instr>>26);
   instr->r1     = (instr->instr>>21) & 0x1F;
   instr->r2     = (instr->instr>>16) & 0x1F;
@@ -239,7 +239,7 @@ void vm_print_memory( DLX_UWORD start, DLX_WORD length ) {
 }
 
 
-inline void vm_internal_print_instr( DLX_UINT pc, dlx_instr_decode *instr ) {
+void vm_internal_print_instr( DLX_UINT pc, dlx_instr_decode *instr ) {
   printf( "%4.4X: %8.8X: %-7s  ", pc, instr->instr, instr->ent->opname );
   
   switch( instr->ent->type ) {
@@ -256,13 +256,13 @@ inline void vm_internal_print_instr( DLX_UINT pc, dlx_instr_decode *instr ) {
   case IMM:
     if( instr->ent->property == ( RD | RS1 | SIMM ) ) {
 	  if( instr->ent->reg_type == INSTR_FP )
-		printf( "f%d, f%d, %f ", instr->rd, instr->r1, instr->imm );
+		printf( "f%d, f%d, %d ", instr->rd, instr->r1, instr->imm );
 	  else
 		printf( "r%d, r%d, %X ", instr->rd, instr->r1, instr->imm & 0xFFFF );
 	}
     else if( instr->ent->property == ( RD | RS1 | UIMM ) ) {
 	  if( instr->ent->reg_type == INSTR_FP ) 
-		printf( "f%d, f%d, %f ", instr->rd, instr->r1, instr->imm );
+		printf( "f%d, f%d, %d ", instr->rd, instr->r1, instr->imm );
 	  else
 		printf( "r%d, r%d, %X ", instr->rd, instr->r1, instr->imm & 0xFFFF );
 	}
