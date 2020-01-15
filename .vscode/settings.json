@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "symbols.h": "c",
+        "dlxinstset.h": "c"
+    }
+}

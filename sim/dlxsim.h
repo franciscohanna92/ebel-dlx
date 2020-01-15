@@ -23,7 +23,6 @@
 #ifndef __DLXSIM_H__
 #define __DLXSIM_H__
 
-
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -36,14 +35,9 @@
 #include "../lib/dlxtypes.h"
 #include "../lib/dlxdebug.h"
 
-
-
 void sim_version();
-
 void sim_init();
 void sim_run();
 void sim_done();
-
-
 
 #endif

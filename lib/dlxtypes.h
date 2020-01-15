@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
  * 02111-1307, USA.
  ************************************************************************/
-                                                                              
+
 #ifndef __DLXTYPES_H__
 #define __DLXTYPES_H__
 
@@ -40,20 +40,18 @@ typedef unsigned int DLX_UINT;
 typedef float DLX_FLOAT;
 typedef double DLX_DOUBLE;
 
-
-#define STORE_LONG_TO_BYTE( ptr, x ) ((*(ptr))= x)
-#define STORE_INT_TO_BYTE( ptr, x ) ((ptr)[0]=(((x)&0xFF000000)>>24),(ptr)[1]=(((x)&0xFF0000)>>16),(ptr)[2]=(((x)&0xFF00)>>8),(ptr)[3]=((x)&0xFF))
+#define STORE_LONG_TO_BYTE(ptr, x) ((*(ptr)) = x)
+#define STORE_INT_TO_BYTE(ptr, x) ((ptr)[0] = (((x)&0xFF000000) >> 24), (ptr)[1] = (((x)&0xFF0000) >> 16), (ptr)[2] = (((x)&0xFF00) >> 8), (ptr)[3] = ((x)&0xFF))
 #define STORE_WORD_TO_BYTE STORE_INT_TO_BYTE
-#define STORE_SHORT_TO_BYTE( ptr, x ) ((ptr)[0]=(((x)&0xFF00)>>8),(ptr)[1]=((x)&0xFF))
-#define STORE_BYTE_TO_BYTE( ptr, x ) ((ptr)[0]=((x)&0xFF))
+#define STORE_SHORT_TO_BYTE(ptr, x) ((ptr)[0] = (((x)&0xFF00) >> 8), (ptr)[1] = ((x)&0xFF))
+#define STORE_BYTE_TO_BYTE(ptr, x) ((ptr)[0] = ((x)&0xFF))
 
-#define STORE_FLOAT_TO_BYTE( ptr, x )  ((*((DLX_FLOAT*)ptr)) = ((DLX_FLOAT)(x)))
-#define STORE_DOUBLE_TO_BYTE( ptr, x ) ((*((DLX_DOUBLE*)ptr)) = ((DLX_DOUBLE)(x)))
+#define STORE_FLOAT_TO_BYTE(ptr, x) ((*((DLX_FLOAT *)ptr)) = ((DLX_FLOAT)(x)))
+#define STORE_DOUBLE_TO_BYTE(ptr, x) ((*((DLX_DOUBLE *)ptr)) = ((DLX_DOUBLE)(x)))
 
-#define LOAD_BYTE_TO_INT( ptr )    ( ((ptr)[0]<<24) | ((ptr)[1]<<16) | ((ptr)[2]<<8) | (ptr)[3] )
+#define LOAD_BYTE_TO_INT(ptr) (((ptr)[0] << 24) | ((ptr)[1] << 16) | ((ptr)[2] << 8) | (ptr)[3])
 #define LOAD_BYTE_TO_WORD LOAD_BYTE_TO_INT
-#define LOAD_BYTE_TO_SHORT( ptr )   ( ((ptr)[0]<<8) | (ptr)[1] )
-#define LOAD_BYTE_TO_BYTE( ptr )    ( (ptr)[0] )
-
+#define LOAD_BYTE_TO_SHORT(ptr) (((ptr)[0] << 8) | (ptr)[1])
+#define LOAD_BYTE_TO_BYTE(ptr) ((ptr)[0])
 
 #endif

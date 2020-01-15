@@ -21,12 +21,12 @@ compile: parser ${OBJECTS} dlx
 
 dlx: ${OBJECTS}
 	@echo "Linking"
-	@${CC} ${CCARGS} ${OBJECTS} -lreadline -o dlx.exe
+	@${CC} -g ${CCARGS} ${OBJECTS} -lreadline -o dlx.exe
 	@echo "Linking done"
 
 .c.o:
 	@echo "Compiling " $*.c " ..."
-	@${CC} ${CCARGS} -c -o $*.o $*.c 
+	@${CC} -g ${CCARGS} -c -o $*.o $*.c 
 
 build: clean compile
 	@echo "Build done!"	

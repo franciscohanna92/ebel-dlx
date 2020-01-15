@@ -42,7 +42,6 @@ typedef enum { FORMAT_I, FORMAT_J, FORMAT_R } instr_format;
 #define INSTR_SP   1
 #define INSTR_FP   2
 
-
 typedef struct dlx_instr_entry {
   char *opname;
   instr_format format;
@@ -51,8 +50,6 @@ typedef struct dlx_instr_entry {
   int reg_type;
   int opcode_value;
 } dlx_instr_entry;
-
-
 
 #define ISPECIAL          0
 #define FPARITH           1
@@ -122,7 +119,6 @@ typedef struct dlx_instr_entry {
 #define op_undef_3E      62
 #define op_undef_3F      63
 
-
 #define NOP              0
 #define sp_func_undef_01 1
 #define sp_func_undef_02 2
@@ -191,7 +187,6 @@ typedef struct dlx_instr_entry {
 #define sp_func_undef_3E 62
 #define sp_func_undef_3F 63
 
-
 #define ADDF              1
 #define SUBF              2
 #define MULTF             3            
@@ -225,7 +220,6 @@ typedef struct dlx_instr_entry {
 #define fp_func_undef_1E 30
 #define fp_func_undef_1F 31
 
-
 #define MAX_DLX_INSTR 64
 #define MAX_DLX_SP_INSTR 64
 #define MAX_DLX_FP_INSTR 32
@@ -233,7 +227,6 @@ typedef struct dlx_instr_entry {
 extern const dlx_instr_entry DLX_INSTR_TABLE[];      
 extern const dlx_instr_entry DLX_INSTR_SP_TABLE[];
 extern const dlx_instr_entry DLX_INSTR_FP_TABLE[];
-
 
 const dlx_instr_entry *dlx_get_instr_by_opcode( char *opname );
 

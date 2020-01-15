@@ -20,26 +20,26 @@
  * 02111-1307, USA.
  ************************************************************************/
 
-
 #include "asm/dlxasm.h"
 #include "sim/dlxsim.h"
 #include "vm/dlxvm.h"
 
-void version() {
+void version()
+{
   printf("\n== DLX System version 1.0.3 ==\n");
   vm_version();
   asm_version();
   sim_version();
   printf("by Etienne Bergeron and Eric Lesage\n\n");
-
 }
 
-int main (int argc, char** argv) {
+int main(int argc, char **argv)
+{
   version();
   vm_init();
   sim_init();
   sim_run();
   sim_done();
-  
+
   return 0;
 }

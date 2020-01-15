@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
  * 02111-1307, USA.
  ************************************************************************/
-                                                                              
+
 #ifndef __DLXVM_H__
 #define __DLXVM_H__
 
@@ -33,17 +33,18 @@
 #include "../lib/dlxtypes.h"
 #include "../lib/dlxdebug.h"
 
-
-typedef struct {
-  DLX_WORD   R[32];  //-- General-Purpose registers.
-  DLX_FLOAT  F[32];  //-- Floating-Point registers.
-  DLX_WORD   PC;     //-- Program counter.
-  DLX_WORD   NPC;    //-- Next Program counter.
-  DLX_WORD   IAR;    //-- Interrupt Adress Register.
-  DLX_WORD   FPSR;   //-- Floating-Point Status Register.
+typedef struct
+{
+  DLX_WORD R[32];  //-- General-Purpose registers.
+  DLX_FLOAT F[32]; //-- Floating-Point registers.
+  DLX_WORD PC;     //-- Program counter.
+  DLX_WORD NPC;    //-- Next Program counter.
+  DLX_WORD IAR;    //-- Interrupt Adress Register.
+  DLX_WORD FPSR;   //-- Floating-Point Status Register.
 } registers_t;
 
-typedef struct DLX_vm {
+typedef struct DLX_vm
+{
   /** VM Variables **/
   registers_t registers;
   DLX_UBYTE *code;
@@ -58,12 +59,12 @@ typedef struct DLX_vm {
   symbols_t *symbols;
   //** VM Options **//
   int branch_delay_slots_count;
-  int branch_delay_slots; 
+  int branch_delay_slots;
   int trace;
 } DLX_vm;
 
-
-typedef struct dlx_instr_decode {
+typedef struct dlx_instr_decode
+{
   unsigned int instr;
   unsigned int opcode;
   int name;
@@ -76,24 +77,22 @@ typedef struct dlx_instr_decode {
 
 extern DLX_vm dlx_vm;
 
-
-
-void vm_set_branch_delay_slots( int nb );
+void vm_set_branch_delay_slots(int nb);
 void vm_version();
 void vm_init();
-int vm_load( DLX_UBYTE *memory, int length,  DLX_UBYTE *code, int code_length, 
-             DLX_UBYTE *data, int data_length, symbols_t *s );
+int vm_load(DLX_UBYTE *memory, int length, DLX_UBYTE *code, int code_length,
+            DLX_UBYTE *data, int data_length, symbols_t *s);
 void vm_print_registers();
-void vm_print_memory( DLX_UINT start, DLX_WORD length );
-void vm_print_symbols( const char* );
-int  vm_disassemble( DLX_UINT start, DLX_WORD length );
-int  vm_step();
-int  vm_run( int length );
-void vm_set_breakpoint( const char* label );
-void vm_unset_breakpoint( const char* label );
+void vm_print_memory(DLX_UINT start, DLX_WORD length);
+void vm_print_symbols(const char *);
+int vm_disassemble(DLX_UINT start, DLX_WORD length);
+int vm_step();
+int vm_run(int length);
+void vm_set_breakpoint(const char *label);
+void vm_unset_breakpoint(const char *label);
 void vm_trace();
 void vm_untrace();
-void vm_jump( int );
+void vm_jump(int);
 void vm_reset();
 
 #endif

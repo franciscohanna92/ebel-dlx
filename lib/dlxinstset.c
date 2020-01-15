@@ -29,7 +29,7 @@
 #define SFP( x ) ((x)|(1<<26))
 
 const dlx_instr_entry DLX_INSTR_TABLE[] = {
-  //--   instr_name,  format,     inst_type,  property--//
+  // instr_name,        format,     inst_type, property--//
   {  "special",         FORMAT_J,   SPECIAL,   0                  , INSTR_NORM, SOP( 0x00 ) },
   {  "fparith",         FORMAT_J,   SPECIAL,   0                  , INSTR_NORM, SOP( 0x01 ) },
   {  "j",               FORMAT_J,   BRANCH,    ( NAME )           , INSTR_NORM, SOP( 0x02 ) },
@@ -98,8 +98,6 @@ const dlx_instr_entry DLX_INSTR_TABLE[] = {
   {  "op_undef_3E",     FORMAT_J,   NONE,      0                 , INSTR_NORM, SOP( 0x3E ) },
   {  "op_undef_3F",     FORMAT_J,   NONE,      0                 , INSTR_NORM, SOP( 0x3F ) }
 };
-
-
 
 const dlx_instr_entry DLX_INSTR_SP_TABLE[] = {
   {  "nop",              FORMAT_J,  NONE,     0                , INSTR_SP, SSP( 0x00 ) },
