@@ -1,7 +1,7 @@
 ; Sum two registers
 
 A equ 2
-B equ 5
+B equ 69
 
 add r1,r0,r0    ; r1 is sum
 addi r2,r0,A    ; load A into register r2

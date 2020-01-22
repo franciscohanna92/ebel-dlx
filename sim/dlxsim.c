@@ -160,25 +160,25 @@ int sim_inspect(char *reg)
     {
       switch (register_token[0])
       {
-      case 'r':
-      case 'R':
-        rtype = 1;
-        break;
+        case 'r':
+        case 'R':
+          rtype = 1;
+          break;
 
-      case 'f':
-      case 'F':
-        rtype = 2;
-        break;
+        case 'f':
+        case 'F':
+          rtype = 2;
+          break;
 
-      case 'p':
-      case 'P':
-        rtype = 3;
-        break;
+        case 'p':
+        case 'P':
+          rtype = 3;
+          break;
 
-      case 'i':
-      case 'I':
-        rtype = 4;
-        break;
+        case 'i':
+        case 'I':
+          rtype = 4;
+          break;
       }
       {
         int r_index = 0;
@@ -186,70 +186,69 @@ int sim_inspect(char *reg)
         DLX_FLOAT f_val = 0;
         switch (rtype)
         {
-
-        case 0:
-          printf("Invalid register name '%s'\n", register_token);
-          break;
-        case 1:
-        case 2:
-          if (streq("fpsr", register_token))
-          {
-            i_val = dlx_vm.registers.PC;
-            printf("FPSR = %u\n", i_val);
-            return 0;
-          }
-          if ((register_token[1] >= '0' && register_token[1] <= '9') && ((register_token[2] >= '0' && register_token[2] <= '9' && register_token[3] == 0) || register_token[2] == 0))
-          {
-            r_index = register_token[1] - '0';
-            if (register_token[2])
+          case 0:
+            printf("Invalid register name '%s'\n", register_token);
+            break;
+          case 1:
+          case 2:
+            if (streq("fpsr", register_token))
             {
-              r_index = 10 * r_index + register_token[2] - '0';
+              i_val = dlx_vm.registers.PC;
+              printf("FPSR = %u\n", i_val);
+              return 0;
             }
-            if (r_index < 32)
+            if ((register_token[1] >= '0' && register_token[1] <= '9') && ((register_token[2] >= '0' && register_token[2] <= '9' && register_token[3] == 0) || register_token[2] == 0))
             {
-              if (rtype == 1)
+              r_index = register_token[1] - '0';
+              if (register_token[2])
               {
-                i_val = dlx_vm.registers.R[r_index];
-                printf("R%d = %d %u 0%o 0x%08x\n", r_index, i_val, i_val, i_val, i_val);
+                r_index = 10 * r_index + register_token[2] - '0';
+              }
+              if (r_index < 32)
+              {
+                if (rtype == 1)
+                {
+                  i_val = dlx_vm.registers.R[r_index];
+                  printf("R%d = %d %u 0%o 0x%08x\n", r_index, i_val, i_val, i_val, i_val);
+                }
+                else
+                {
+                  f_val = dlx_vm.registers.F[r_index];
+                  printf("F%d = %f %f 0%f 0x%08f\n", r_index, f_val, f_val, f_val, f_val);
+                }
               }
               else
               {
-                f_val = dlx_vm.registers.F[r_index];
-                printf("F%d = %f %f 0%f 0x%08f\n", r_index, f_val, f_val, f_val, f_val);
+                printf("Register out of range (%d)\n", r_index);
               }
             }
             else
             {
-              printf("Register out of range (%d)\n", r_index);
+              printf("Invalid register name '%s'\n", register_token);
             }
-          }
-          else
-          {
-            printf("Invalid register name '%s'\n", register_token);
-          }
-          break;
-        case 3:
-          if (streq("pc", register_token))
-          {
-            i_val = dlx_vm.registers.PC;
-            printf("PC = %i %u 0%o 0x%08x\n", i_val, i_val, i_val, i_val);
-          }
-          else
-          {
-            printf("Invalid register name\n");
-          }
-          break;
-        case 4:
-          if (streq("iar", register_token))
-          {
-            i_val = dlx_vm.registers.PC;
-            printf("IAR = %u 0%o 0x%08x\n", i_val, i_val, i_val);
-          }
-          else
-          {
-            printf("Invalid register name '%s'\n", register_token);
-          }
-          break;
+            break;
+          case 3:
+            if (streq("pc", register_token))
+            {
+              i_val = dlx_vm.registers.PC;
+              printf("PC = %i %u 0%o 0x%08x\n", i_val, i_val, i_val, i_val);
+            }
+            else
+            {
+              printf("Invalid register name\n");
+            }
+            break;
+          case 4:
+            if (streq("iar", register_token))
+            {
+              i_val = dlx_vm.registers.PC;
+              printf("IAR = %u 0%o 0x%08x\n", i_val, i_val, i_val);
+            }
+            else
+            {
+              printf("Invalid register name '%s'\n", register_token);
+            }
+            break;
         }
       }
     }
@@ -364,7 +363,7 @@ void sim_run()
   int code_loaded = 0; /* Is there code loaded? */
   asm_info_t *asm_result = NULL;
   char *in;
-  while (!quit && (in = readline("DLX>")))
+  while (!quit && (in = readline("")))
   {
     int command_code = 0;
     char *out;

@@ -184,37 +184,56 @@ void vm_internal_decode(dlx_instr_decode *instr)
 void vm_internal_print_registers()
 {
   int i;
-  printf("PC: %2.2X  ", dlx_vm.registers.PC);
-  printf("(NPC): %2.2X  ", dlx_vm.registers.NPC);
-  printf("IAR: %2.2X  ", dlx_vm.registers.IAR);
-  printf("FPSR: %2.2X  ", dlx_vm.registers.FPSR);
-  printf("\n");
-
-  printf("R: ");
+  printf("{\"PC\": \"%2.2X\", ", dlx_vm.registers.PC);
+  printf("\"NPC\": \"%2.2X\", ", dlx_vm.registers.NPC);
+  printf("\"IAR\": \"%2.2X\", ", dlx_vm.registers.IAR);
+  printf("\"FPSR\": \"%2.2X\", ", dlx_vm.registers.FPSR);
+  printf("\"R\": [");
   for (i = 0; i < 32; i++)
   {
-    if (i % 8 == 0)
-      printf("\n  ");
-    printf("%8.8X ", dlx_vm.registers.R[i]);
+    DLX_WORD regValue = dlx_vm.registers.R[i];
+    if (i == 31)
+    {
+      printf("{ \"id\": %d, \"value\": \"%8.8x\" }], ", i, regValue);
+    }
+    else
+    {
+      printf("{ \"id\": %d, \"value\": \"%8.8x\" }, ", i, regValue);
+    }
   }
-  printf("\n");
 
-  printf("F: ");
+  printf("\"F\": [");
   for (i = 0; i < 32; i++)
   {
-    if (i % 8 == 0)
-      printf("\n  ");
-    printf("%8f ", dlx_vm.registers.F[i]);
+    DLX_FLOAT regValue = dlx_vm.registers.F[i];
+    if (i == 31)
+    {
+      printf("\"%8f\"], ", regValue);
+    }
+    else
+    {
+      printf("\"%8f\", ", regValue);
+    }
   }
-  printf("\n");
 
-  printf("D: ");
+  printf("\"D\": [");
   for (i = 0; i < 16; i++)
   {
-    if (i % 8 == 0)
-      printf("\n  ");
-    printf("%8f ", *((double *)&dlx_vm.registers.F[i * 2]));
+    double regValue = *((double *)&dlx_vm.registers.F[i * 2]);
+    if (i == 15)
+    {
+      printf("\"%8f\"] ", regValue);
+    }
+    else
+    {
+      printf("\"%8f\", ", regValue);
+    }
+
+    // if (i % 8 == 0)
+    //   printf("\n  ");
+    // printf("%8f ", *((double *)&dlx_vm.registers.F[i * 2]));
   }
+  printf("}");
   printf("\n");
 }
 
@@ -278,20 +297,19 @@ void vm_print_memory(DLX_UWORD start, DLX_WORD length)
   vm_internal_print_memory(start, length);
 }
 
-void vm_internal_print_instr(DLX_UINT pc, dlx_instr_decode *instr)
+void vm_internal_print_instr(DLX_UINT pc, dlx_instr_decode *instr, int code_length, int length)
 {
-  printf("%4.4X: %8.8X: %-7s  ", pc, instr->instr, instr->ent->opname);
+  printf("{ \"pc\": \"%4.4X\", \"instr\": \"%8.8X\", \"opname\": \"%s\", \"args\": [", pc, instr->instr, instr->ent->opname);
 
   switch (instr->ent->type)
   {
-
   case REG:
     if (instr->ent->property == (RD | RS1 | RS2))
     {
       if (instr->ent->reg_type == INSTR_FP)
-        printf("f%d, f%d, f%d ", instr->rd, instr->r1, instr->r2);
+        printf("\"f%d\", \"f%d\", \"f%d\"", instr->rd, instr->r1, instr->r2);
       else
-        printf("r%d, r%d, r%d ", instr->rd, instr->r1, instr->r2);
+        printf("\"r%d\", \"r%d\", \"r%d\"", instr->rd, instr->r1, instr->r2);
     }
     break;
 
@@ -299,14 +317,14 @@ void vm_internal_print_instr(DLX_UINT pc, dlx_instr_decode *instr)
     if (instr->ent->property == (RD | RS1 | SIMM))
     {
       if (instr->ent->reg_type == INSTR_FP)
-        printf("f%d, f%d, %d ", instr->rd, instr->r1, instr->imm);
+        printf("\"f%d\", \"f%d\", \"%d\"", instr->rd, instr->r1, instr->imm);
       else
-        printf("r%d, r%d, %X ", instr->rd, instr->r1, instr->imm & 0xFFFF);
+        printf("\"r%d\", \"r%d\", \"%X\"", instr->rd, instr->r1, instr->imm & 0xFFFF);
     }
     else if (instr->ent->property == (RD | RS1 | UIMM))
     {
       if (instr->ent->reg_type == INSTR_FP)
-        printf("f%d, f%d, %d ", instr->rd, instr->r1, instr->imm);
+        printf("\"f%d\", \"f%d\", \"%d\"", instr->rd, instr->r1, instr->imm);
       else
         printf("r%d, r%d, %X ", instr->rd, instr->r1, instr->imm & 0xFFFF);
     }
@@ -314,27 +332,27 @@ void vm_internal_print_instr(DLX_UINT pc, dlx_instr_decode *instr)
 
   case LOAD:
     if (instr->ent->reg_type == INSTR_FP)
-      printf("f%d, %X(r%d) ", instr->rd, instr->imm & 0xFFFF, instr->r1);
+      printf("\"f%d\", \"%X(r%d)\"", instr->rd, instr->imm & 0xFFFF, instr->r1);
     else
-      printf("r%d, %X(r%d) ", instr->rd, instr->imm & 0xFFFF, instr->r1);
+      printf("\"r%d\", \"%X(r%d)\"", instr->rd, instr->imm & 0xFFFF, instr->r1);
 
     break;
 
   case STORE:
     if (instr->ent->reg_type == INSTR_FP)
-      printf("%X(r%d), f%d ", instr->imm & 0xFFFF, instr->r1, instr->rd);
+      printf("\"%X(r%d)\", \"f%d\"", instr->imm & 0xFFFF, instr->r1, instr->rd);
     else
-      printf("%X(r%d), r%d ", instr->imm & 0xFFFF, instr->r1, instr->rd);
+      printf("\"%X(r%d)\", \"r%d\"", instr->imm & 0xFFFF, instr->r1, instr->rd);
 
     break;
 
   case BRANCH:
     if (instr->ent->property == RS1)
-      printf("r%d", instr->r1);
+      printf("\"r%d\"", instr->r1);
     else if (instr->ent->property == NAME)
-      printf("%X", instr->name);
+      printf("\"%X\"", instr->name);
     else if (instr->ent->property == (RS1 | NAME))
-      printf("r%d, %X", instr->r1, instr->name);
+      printf("\"r%d\", \"%X\"", instr->r1, instr->name);
     break;
 
   case MOVE:
@@ -346,11 +364,22 @@ void vm_internal_print_instr(DLX_UINT pc, dlx_instr_decode *instr)
 
   case SPECIAL:
     if (instr->ent->property == NAME)
-      printf("%X", instr->name);
+      printf("\"%X\"", instr->name);
     break;
   };
 
-  printf("\n");
+  if (pc + 4 == code_length || length == 1)
+  {
+    printf("]}");
+  }
+  else
+  {
+    printf("]}, ");
+  }
+
+  if(length == 1) {
+    printf("\n");
+  }
 }
 
 int vm_memory_check(int offset, int length)
@@ -839,7 +868,7 @@ int vm_internal_execute(dlx_instr_decode *instr)
   case TRAP:
     dlx_vm.registers.IAR = dlx_vm.registers.PC;
     dlx_vm.registers.PC = (DLX_WORD)instr->name;
-    printf("Program exited normally.\n");
+    // printf("Program exited normally.\n");
     return 1;
 
   case JR:
@@ -1119,6 +1148,10 @@ int vm_internal_run(int length)
   if (dlx_vm.breakpoints[dlx_vm.registers.PC])
     bypass_breakpoint = 1;
 
+  if (dlx_vm.trace && (length > 1 || length == -1))
+  {
+    printf("[");
+  }
   for (i = 0; i < length || loop == -1; i++)
   {
 
@@ -1127,7 +1160,7 @@ int vm_internal_run(int length)
     if (vm_internal_fetch(dlx_vm.registers.PC, &instr))
     {
       printf("Memory trap on code segment. (at %X)\n", dlx_vm.registers.PC);
-      return 1;
+      break;
     }
 
     //-- Decode --//
@@ -1137,13 +1170,15 @@ int vm_internal_run(int length)
     //-- Print --//
     vm_debug_println(3, "run print.");
     if (dlx_vm.trace)
-      vm_internal_print_instr(dlx_vm.registers.PC, &instr);
+    {
+      vm_internal_print_instr(dlx_vm.registers.PC, &instr, dlx_vm.code_length, length);
+    }
 
     //-- Breakpoint check --//
     if (dlx_vm.breakpoints[dlx_vm.registers.PC] && bypass_breakpoint == 0)
     {
       printf("Breakpoint at %04X\n", dlx_vm.registers.PC);
-      return 1;
+      break;
     }
     else
       bypass_breakpoint = 0;
@@ -1155,7 +1190,7 @@ int vm_internal_run(int length)
     {
       res = vm_internal_execute(&instr);
       if (res)
-        return 1;
+        break;
     }
     else
     {
@@ -1163,10 +1198,14 @@ int vm_internal_run(int length)
       if ((--dlx_vm.branch_delay_slots_count) == 0)
         dlx_vm.registers.PC = dlx_vm.registers.NPC;
       if (res)
-        return 1;
+        break;
     }
   }
   debug_indent(-2);
+  if (dlx_vm.trace && (length > 1 || length == -1))
+  {
+    printf("]\n");
+  }
   return 1;
 }
 
@@ -1179,10 +1218,11 @@ int vm_disassemble(DLX_UWORD start, DLX_WORD length)
   debug_println("DLX Virtual Machine disassemble code...");
   debug_indent(2);
 
+  printf("[");
   for (i = 0; i < length || loop < 0; i++)
   {
     if (start + i * 4 >= dlx_vm.code_length)
-      return 1;
+      break;
     //-- Fetch --//
     vm_debug_println(3, "disassemble fetch.");
     vm_internal_fetch((i * 4) + start, &instr);
@@ -1195,11 +1235,9 @@ int vm_disassemble(DLX_UWORD start, DLX_WORD length)
     vm_debug_println(3, "disassemble print.");
     if (dlx_vm.breakpoints[(i * 4) + start])
       printf("<!>");
-    else
-      printf("   ");
-    vm_internal_print_instr(i * 4 + start, &instr);
+    vm_internal_print_instr(i * 4 + start, &instr, dlx_vm.code_length, __INT_MAX__);
   }
-
+  printf("]\n");
   debug_indent(-2);
   return 1;
 }

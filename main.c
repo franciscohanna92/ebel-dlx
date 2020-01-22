@@ -20,21 +20,27 @@
  * 02111-1307, USA.
  ************************************************************************/
 
+#include <termios.h>
 #include "asm/dlxasm.h"
 #include "sim/dlxsim.h"
 #include "vm/dlxvm.h"
 
 void version()
 {
-  printf("\n== DLX System version 1.0.3 ==\n");
-  vm_version();
-  asm_version();
-  sim_version();
-  printf("by Etienne Bergeron and Eric Lesage\n\n");
+  // printf("\n== DLX System version 1.0.3 ==\n");
+  // vm_version();
+  // asm_version();
+  // sim_version();
+  // printf("by Etienne Bergeron and Eric Lesage\n\n");
 }
 
 int main(int argc, char **argv)
 {
+  // struct termios t;
+  // tcgetattr(0, &t);
+  // t.c_lflag &= ~ECHO;
+  // tcsetattr(0, TCSANOW, &t);
+  
   version();
   vm_init();
   sim_init();
